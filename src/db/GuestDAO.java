@@ -1,7 +1,6 @@
 package db;
 
 import models.Guest;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,34 @@ public class GuestDAO {
             return true;
         } catch (SQLException e) {
             System.out.println("❌ Error inserting guest");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateGuest(Guest g) {
+        String sql = "UPDATE Guests SET full_name = ?, email = ?, phone = ?, address = ? WHERE guest_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, g.getFullName());
+            stmt.setString(2, g.getEmail());
+            stmt.setString(3, g.getPhone());
+            stmt.setString(4, g.getAddress());
+            stmt.setInt(5, g.getGuestId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating guest");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteGuest(int guestId) {
+        String sql = "DELETE FROM Guests WHERE guest_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, guestId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error deleting guest");
             e.printStackTrace();
             return false;
         }
@@ -78,5 +105,4 @@ public class GuestDAO {
         }
         return null;
     }
-
 }
