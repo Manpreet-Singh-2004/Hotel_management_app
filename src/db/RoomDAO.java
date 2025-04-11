@@ -1,7 +1,6 @@
 package db;
 
 import models.Room;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class RoomDAO {
             return false;
         }
     }
+
     public boolean updateRoom(Room r) {
         String sql = "UPDATE Rooms SET room_number = ?, type = ?, price = ?, status = ? WHERE room_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -70,13 +70,13 @@ public class RoomDAO {
             stmt.setInt(1, roomId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Room room = new Room();
-                room.setRoomId(rs.getInt("room_id"));
-                room.setRoomNumber(rs.getString("room_number"));
-                room.setType(rs.getString("type"));
-                room.setPrice(rs.getDouble("price"));
-                room.setStatus(rs.getString("status"));
-                return room;
+                return new Room(
+                        rs.getInt("room_id"),
+                        rs.getString("room_number"),
+                        rs.getString("type"),
+                        rs.getDouble("price"),
+                        rs.getString("status")
+                );
             }
         } catch (Exception e) {
             System.out.println("❌ Error fetching room by ID");
@@ -84,14 +84,20 @@ public class RoomDAO {
         }
         return null;
     }
+
     public Room getRoomByNumber(String number) {
         try {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Rooms WHERE room_number = ?");
             stmt.setString(1, number);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new Room(rs.getInt("room_id"), rs.getString("room_number"),
-                        rs.getString("type"), rs.getDouble("price"), rs.getString("status"));
+                return new Room(
+                        rs.getInt("room_id"),
+                        rs.getString("room_number"),
+                        rs.getString("type"),
+                        rs.getDouble("price"),
+                        rs.getString("status")
+                );
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,4 +105,15 @@ public class RoomDAO {
         return null;
     }
 
+    public boolean deleteRoom(int roomId) {
+        String sql = "DELETE FROM Rooms WHERE room_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, roomId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error deleting room");
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
