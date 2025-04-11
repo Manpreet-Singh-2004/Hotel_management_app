@@ -1,15 +1,7 @@
 package ui;
 
-import db.DBInitializer;
-import db.InvoiceDAO;
-import db.ReservationDAO;
-import db.RoomDAO;
-import db.PromotionDAO;
-import models.Invoice;
-import models.Reservation;
-import models.Room;
-import models.Promotion;
-import models.User;
+import db.*;
+import models.*;
 import main.MainMenu;
 
 import javax.swing.*;
@@ -18,6 +10,8 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class BillingScreen extends JFrame {
     private JComboBox<ReservationItem> reservationCombo;
@@ -72,7 +66,7 @@ public class BillingScreen extends JFrame {
         form.add(totalField);
 
         JButton generateBtn = new JButton("🧾 Generate Invoice");
-        JButton backBtn = new JButton("Back");
+        JButton backBtn = new JButton("⬅ Back");
         form.add(generateBtn);
         form.add(backBtn);
 
@@ -120,7 +114,9 @@ public class BillingScreen extends JFrame {
         roomInfoField.setText(room.getRoomNumber() + " - " + room.getType());
         stayField.setText(days + " nights");
 
-        Promotion promo = new PromotionDAO().getValidPromotionForReservation(r.getReservationId());
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Promotion promo = new PromotionDAO().getBestApplicablePromotion(r.getReservationId(), today);
+
         double discount = 0;
 
         if (promo != null) {
@@ -143,8 +139,16 @@ public class BillingScreen extends JFrame {
             ReservationItem item = (ReservationItem) reservationCombo.getSelectedItem();
             if (item == null) return;
 
-            int reservationId = item.reservation.getReservationId();
-            int guestId = item.reservation.getGuestId();
+            Reservation r = item.reservation;
+            int reservationId = r.getReservationId();
+
+            // Check if invoice already exists
+            if (new InvoiceDAO().invoiceExistsForReservation(reservationId)) {
+                JOptionPane.showMessageDialog(this, "⚠️ Invoice already exists for this reservation.");
+                return;
+            }
+
+            int guestId = r.getGuestId();
             String date = dateField.getText().trim();
             double total = Double.parseDouble(totalField.getText().trim());
 
@@ -192,7 +196,6 @@ public class BillingScreen extends JFrame {
         User dummy = new User("admin", "123", "Admin");
         MainMenu menu = new MainMenu(dummy);
         menu.setVisible(false);
-
         SwingUtilities.invokeLater(() -> new BillingScreen(dummy, menu).setVisible(true));
     }
 }

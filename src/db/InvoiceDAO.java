@@ -28,6 +28,20 @@ public class InvoiceDAO {
         }
     }
 
+    public boolean invoiceExistsForReservation(int reservationId) {
+        String sql = "SELECT COUNT(*) FROM Invoices WHERE reservation_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, reservationId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error checking invoice existence");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     public List<Invoice> getAllInvoices() {
         List<Invoice> invoices = new ArrayList<>();
         String sql = "SELECT * FROM Invoices ORDER BY invoice_id DESC";
