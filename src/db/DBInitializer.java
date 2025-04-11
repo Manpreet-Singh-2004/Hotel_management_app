@@ -9,6 +9,15 @@ public class DBInitializer {
                 // Drop the outdated Promotions table (temporary fix during dev)
 //                "DROP TABLE IF EXISTS Promotions;",
 
+
+                "CREATE TABLE housekeeping (" +
+                        "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "    room_id INTEGER NOT NULL," +
+                        "    status TEXT NOT NULL," +
+                        "    is_deep_clean BOOLEAN," +
+                        "    is_maintenance BOOLEAN" +
+                        ");",
+
                 "CREATE TABLE IF NOT EXISTS Guests (" +
                         "guest_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "full_name TEXT," +

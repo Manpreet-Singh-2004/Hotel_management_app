@@ -3,6 +3,7 @@ package ui;
 import db.UserDAO;
 import main.MainMenu;
 import models.User;
+import db.DBInitializer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,8 @@ import java.awt.*;
 public class LoginScreen extends JFrame {
 
     public LoginScreen() {
+        DBInitializer.initialize();
+
         setTitle("🔐 Login");
         setSize(350, 250);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -2,6 +2,8 @@ package main;
 
 import models.User;
 import ui.*;
+import db.DBConnection;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +33,7 @@ public class MainMenu extends JFrame {
         JButton promoBtn = new JButton("🎁 Promotions");
         JButton logoutBtn = new JButton("🔐 Logout");
         JButton exitBtn = new JButton("🚪 Exit");
+        JButton housekeepingBtn = new JButton("🧹 Manage Housekeeping");
 
         // Access control
         if (currentUser.isAdmin()) {
@@ -42,6 +45,7 @@ public class MainMenu extends JFrame {
             panel.add(reportBtn);
             panel.add(searchBtn);
             panel.add(promoBtn);
+            panel.add(housekeepingBtn);
         } else if (currentUser.isReceptionist()) {
             panel.add(guestBtn);
             panel.add(reserveBtn);
@@ -54,6 +58,12 @@ public class MainMenu extends JFrame {
         add(panel);
 
         // Actions – hide MainMenu and open forms
+        housekeepingBtn.addActionListener(e -> {
+            setVisible(false);
+            new HousekeepingForm(db.DBConnection.getInstance().getConnection()).setVisible(true);
+        });
+
+
         guestBtn.addActionListener(e -> {
             setVisible(false);
             new GuestForm(currentUser, this).setVisible(true);
