@@ -32,6 +32,7 @@ public class MainMenu extends JFrame {
         JButton searchBtn = new JButton("🔍 Search / Filter");
         JButton promoBtn = new JButton("🎁 Promotions");
         JButton historyBtn = new JButton("📜 View History");
+        JButton lateCheckoutBtn = new JButton("⏰ Late Check-Out");
         JButton logoutBtn = new JButton("🔐 Logout");
         JButton exitBtn = new JButton("🚪 Exit");
         JButton housekeepingBtn = new JButton("🧹 Manage Housekeeping");
@@ -48,6 +49,7 @@ public class MainMenu extends JFrame {
             panel.add(searchBtn);
             panel.add(promoBtn);
             panel.add(housekeepingBtn);
+            panel.add(lateCheckoutBtn);
             panel.add(historyBtn);
         } else if (currentUser.isReceptionist()) {
             panel.add(guestBtn);
@@ -55,6 +57,7 @@ public class MainMenu extends JFrame {
             panel.add(groupBtn);
             panel.add(billingBtn);
             panel.add(searchBtn);
+            panel.add(lateCheckoutBtn);
             panel.add(historyBtn);
         }
 
@@ -68,6 +71,11 @@ public class MainMenu extends JFrame {
             setVisible(false);
             new HousekeepingForm(DBConnection.getInstance().getConnection(), this).setVisible(true);
         });
+
+        lateCheckoutBtn.addActionListener(e -> {
+            setVisible(false);
+            new LateCheckoutForm(currentUser, this, DBConnection.getInstance().getConnection()).setVisible(true);
+        });        
 
         guestBtn.addActionListener(e -> {
             setVisible(false);
