@@ -11,11 +11,11 @@ Hotel_management_app/
 ├── lib/                     # External libraries (JCalendar, SQLite JDBC)
 ├── out/                     # Build outputs
 ├── src/
-│   ├── dao/                 # Data Access Objects
+│   ├── main/                # Contains main files
 │   ├── db/                  # DB Initialization
 │   ├── model/               # Model classes (Reservation, Guest, Room, etc.)
 │   └── ui/                  # UI screens (Login, MainMenu, ReservationForm, etc.)
-├── database.db              # SQLite database
+├── hotel.db                 # SQLite database
 ├── README.md
 ```
 
