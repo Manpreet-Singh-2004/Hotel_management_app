@@ -4,7 +4,6 @@ import models.User;
 import ui.*;
 import db.DBConnection;
 
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -61,11 +60,11 @@ public class MainMenu extends JFrame {
         add(panel);
 
         // Actions – hide MainMenu and open forms
+
         housekeepingBtn.addActionListener(e -> {
             setVisible(false);
-            new HousekeepingForm(db.DBConnection.getInstance().getConnection()).setVisible(true);
+            new HousekeepingForm(DBConnection.getInstance().getConnection(), this).setVisible(true);
         });
-
 
         guestBtn.addActionListener(e -> {
             setVisible(false);

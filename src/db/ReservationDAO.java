@@ -1,6 +1,7 @@
 package db;
 
 import models.Reservation;
+import models.HousekeepingTask;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -72,12 +73,30 @@ public class ReservationDAO {
     }
 
     public boolean deleteReservation(int reservationId) {
-        String sql = "DELETE FROM Reservations WHERE reservation_id=?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, reservationId);
-            return stmt.executeUpdate() > 0;
+        String fetchRoomSql = "SELECT room_id FROM Reservations WHERE reservation_id = ?";
+        String deleteSql = "DELETE FROM Reservations WHERE reservation_id = ?";
+
+        try (PreparedStatement fetchStmt = conn.prepareStatement(fetchRoomSql)) {
+            fetchStmt.setInt(1, reservationId);
+            ResultSet rs = fetchStmt.executeQuery();
+
+            if (rs.next()) {
+                int roomId = rs.getInt("room_id");
+
+                // Add housekeeping task before deleting the reservation
+                HousekeepingDAO housekeepingDAO = new HousekeepingDAO(conn);
+                HousekeepingTask task = new HousekeepingTask(0, roomId, "Pending", false, false);
+                housekeepingDAO.addTask(task);
+            }
+
+            // Now delete the reservation
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+                deleteStmt.setInt(1, reservationId);
+                return deleteStmt.executeUpdate() > 0;
+            }
+
         } catch (SQLException e) {
-            System.out.println("❌ Error deleting reservation");
+            System.out.println("❌ Error deleting reservation and triggering housekeeping");
             e.printStackTrace();
             return false;
         }

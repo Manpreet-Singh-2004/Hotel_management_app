@@ -13,6 +13,10 @@ public class HousekeepingDAO {
         this.connection = connection;
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     public void addTask(HousekeepingTask task) throws SQLException {
         String sql = "INSERT INTO housekeeping (room_id, status, is_deep_clean, is_maintenance) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -49,6 +53,14 @@ public class HousekeepingDAO {
             stmt.setBoolean(2, task.isDeepClean());
             stmt.setBoolean(3, task.isMaintenance());
             stmt.setInt(4, task.getTaskId());
+            stmt.executeUpdate();
+        }
+    }
+
+    public void deleteTask(int taskId) throws SQLException {
+        String sql = "DELETE FROM housekeeping WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, taskId);
             stmt.executeUpdate();
         }
     }
