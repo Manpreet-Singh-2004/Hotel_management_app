@@ -45,7 +45,7 @@ These UML diagrams illustrate system architecture and workflows.
 ![Class Diagram](/media/ClassDiagram.png)
 
 ### ✅ Sequence Diagram
-![Sequence Diagram](/media/SeQuenceDiagram.png)
+![Sequence Diagram](/media/SequenceDiagram.png)
 
 ---
 
