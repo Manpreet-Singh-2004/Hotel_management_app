@@ -6,16 +6,13 @@ import java.sql.Statement;
 public class DBInitializer {
     public static void initialize() {
         String[] tables = {
-                // Drop the outdated Promotions table (temporary fix during dev)
-//                "DROP TABLE IF EXISTS Promotions;",
-
-
-                "CREATE TABLE housekeeping (" +
-                        "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    room_id INTEGER NOT NULL," +
-                        "    status TEXT NOT NULL," +
-                        "    is_deep_clean BOOLEAN," +
-                        "    is_maintenance BOOLEAN" +
+                // ✅ Fixed: Prevent error on re-run by using IF NOT EXISTS
+                "CREATE TABLE IF NOT EXISTS housekeeping (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "room_id INTEGER NOT NULL," +
+                        "status TEXT NOT NULL," +
+                        "is_deep_clean BOOLEAN," +
+                        "is_maintenance BOOLEAN" +
                         ");",
 
                 "CREATE TABLE IF NOT EXISTS Guests (" +
