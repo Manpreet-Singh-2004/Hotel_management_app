@@ -15,5 +15,5 @@
 - [ ] **Late Check-Out Handling Logic**  
   Implement logic to process late check-outs: extend reservation, adjust housekeeping schedule, and apply extra charges.
 
-- [ ] **Seasonal Pricing Adjustments**  
-  Introduce dynamic pricing based on season, local events, or occupancy. UI support for setting date-based pricing rules is required.
+- [x] **Seasonal Pricing Adjustments**  
+  Introduce dynamic pricing based on season, local events, or occupancy. UI support for setting date-based pricing rules is required. -Shreyas
