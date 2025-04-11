@@ -7,15 +7,6 @@ public class DBInitializer {
     public static void initialize() {
         String[] tables = {
                 // ✅ Fixed: Prevent error on re-run by using IF NOT EXISTS
-
-                "CREATE TABLE IF NOT EXISTS SeasonalPricing (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "start_date TEXT NOT NULL," +
-                        "end_date TEXT NOT NULL," +
-                        "price_multiplier REAL NOT NULL," +
-                        "description TEXT" +
-                        ");",
-
                 "CREATE TABLE IF NOT EXISTS housekeeping (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "room_id INTEGER NOT NULL," +
@@ -75,10 +66,12 @@ public class DBInitializer {
                         "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "group_id INTEGER," +
                         "room_id INTEGER," +
+                        "guest_id INTEGER," +
                         "check_in TEXT," +
                         "check_out TEXT," +
                         "FOREIGN KEY(group_id) REFERENCES GroupReservations(group_id)," +
-                        "FOREIGN KEY(room_id) REFERENCES Rooms(room_id)" +
+                        "FOREIGN KEY(room_id) REFERENCES Rooms(room_id)," +
+                        "FOREIGN KEY(guest_id) REFERENCES Guests(guest_id)" +
                         ");",
 
                 "CREATE TABLE IF NOT EXISTS Promotions (" +

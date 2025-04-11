@@ -1,4 +1,3 @@
-// src/main/MainMenu.java
 package main;
 
 import models.User;
@@ -20,7 +19,7 @@ public class MainMenu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(11, 1, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(10, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         JButton guestBtn = new JButton("👤 Manage Guests");
@@ -32,10 +31,10 @@ public class MainMenu extends JFrame {
         JButton reportBtn = new JButton("📊 Reports");
         JButton searchBtn = new JButton("🔍 Search / Filter");
         JButton promoBtn = new JButton("🎁 Promotions");
+        JButton historyBtn = new JButton("📜 View History");
         JButton logoutBtn = new JButton("🔐 Logout");
         JButton exitBtn = new JButton("🚪 Exit");
         JButton housekeepingBtn = new JButton("🧹 Manage Housekeeping");
-        JButton seasonalBtn = new JButton("📅 Seasonal Pricing");
 
         // Access control
         if (currentUser.isAdmin()) {
@@ -49,13 +48,14 @@ public class MainMenu extends JFrame {
             panel.add(searchBtn);
             panel.add(promoBtn);
             panel.add(housekeepingBtn);
-            panel.add(seasonalBtn);
+            panel.add(historyBtn);
         } else if (currentUser.isReceptionist()) {
             panel.add(guestBtn);
             panel.add(reserveBtn);
             panel.add(groupBtn);
             panel.add(billingBtn);
             panel.add(searchBtn);
+            panel.add(historyBtn);
         }
 
         panel.add(logoutBtn);
@@ -67,11 +67,6 @@ public class MainMenu extends JFrame {
         housekeepingBtn.addActionListener(e -> {
             setVisible(false);
             new HousekeepingForm(DBConnection.getInstance().getConnection(), this).setVisible(true);
-        });
-
-        seasonalBtn.addActionListener(e -> {
-            setVisible(false);
-            new SeasonalPricingForm(DBConnection.getInstance().getConnection(), this).setVisible(true);
         });
 
         guestBtn.addActionListener(e -> {
@@ -119,14 +114,11 @@ public class MainMenu extends JFrame {
             new PromotionForm(currentUser, this).setVisible(true);
         });
 
-<<<<<<< Updated upstream
         historyBtn.addActionListener(e -> {
             dispose();
             new GuestHistoryScreen(currentUser, this).setVisible(true);
         });
 
-=======
->>>>>>> Stashed changes
         logoutBtn.addActionListener(e -> {
             dispose();
             new LoginScreen().setVisible(true);

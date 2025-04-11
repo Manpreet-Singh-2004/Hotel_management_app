@@ -1,8 +1,15 @@
-// src/ui/BillingScreen.java
 package ui;
 
-import db.*;
-import models.*;
+import db.DBInitializer;
+import db.InvoiceDAO;
+import db.ReservationDAO;
+import db.RoomDAO;
+import db.PromotionDAO;
+import models.Invoice;
+import models.Reservation;
+import models.Room;
+import models.Promotion;
+import models.User;
 import main.MainMenu;
 
 import javax.swing.*;
@@ -14,7 +21,7 @@ import java.util.List;
 
 public class BillingScreen extends JFrame {
     private JComboBox<ReservationItem> reservationCombo;
-    private JTextField guestIdField, dateField, totalField, roomInfoField, stayField, seasonField;
+    private JTextField guestIdField, dateField, totalField, roomInfoField, stayField;
     private DefaultTableModel tableModel;
     private JLabel promoLabel;
     private final User currentUser;
@@ -25,7 +32,7 @@ public class BillingScreen extends JFrame {
         this.mainMenu = menu;
 
         setTitle("💳 Invoice / Billing System");
-        setSize(700, 550);
+        setSize(700, 480);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         DBInitializer.initialize();
@@ -34,21 +41,20 @@ public class BillingScreen extends JFrame {
         main.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         add(main);
 
-        JPanel form = new JPanel(new GridLayout(9, 2, 10, 10));
+        // Form
+        JPanel form = new JPanel(new GridLayout(8, 2, 10, 10));
         reservationCombo = new JComboBox<>();
         guestIdField = new JTextField();
         dateField = new JTextField(LocalDate.now().toString());
         roomInfoField = new JTextField();
         stayField = new JTextField();
         totalField = new JTextField();
-        seasonField = new JTextField();
         promoLabel = new JLabel("🎁 No promotion applied");
 
         guestIdField.setEditable(false);
         roomInfoField.setEditable(false);
         stayField.setEditable(false);
         totalField.setEditable(false);
-        seasonField.setEditable(false);
 
         form.add(new JLabel("Reservation:"));
         form.add(reservationCombo);
@@ -62,8 +68,6 @@ public class BillingScreen extends JFrame {
         form.add(dateField);
         form.add(new JLabel("Promotion:"));
         form.add(promoLabel);
-        form.add(new JLabel("Seasonal Rule:"));
-        form.add(seasonField);
         form.add(new JLabel("Total Amount ($):"));
         form.add(totalField);
 
@@ -74,6 +78,7 @@ public class BillingScreen extends JFrame {
 
         main.add(form, BorderLayout.NORTH);
 
+        // Table
         tableModel = new DefaultTableModel(new String[]{"Invoice ID", "Reservation ID", "Guest ID", "Date", "Total"}, 0);
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -84,11 +89,7 @@ public class BillingScreen extends JFrame {
 
         reservationCombo.addActionListener(e -> updateSummary());
 
-        generateBtn.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "Generate invoice for total: $" + totalField.getText() + "?", "Confirm", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) generateInvoice();
-        });
-
+        generateBtn.addActionListener(e -> generateInvoice());
         backBtn.addActionListener(e -> {
             dispose();
             mainMenu.setVisible(true);
@@ -113,32 +114,11 @@ public class BillingScreen extends JFrame {
         if (room == null) return;
 
         long days = ChronoUnit.DAYS.between(LocalDate.parse(r.getCheckIn()), LocalDate.parse(r.getCheckOut()));
-        double basePrice = room.getPrice();
-        double seasonalMultiplier = 1.0;
-        String appliedSeasonRule = "None";
-
-        try {
-            List<SeasonalPricing> rules = new SeasonalPricingDAO(DBConnection.getInstance().getConnection()).getAll();
-            LocalDate checkIn = LocalDate.parse(r.getCheckIn());
-            for (SeasonalPricing sp : rules) {
-                LocalDate start = LocalDate.parse(sp.getStartDate());
-                LocalDate end = LocalDate.parse(sp.getEndDate());
-                if ((checkIn.isEqual(start) || checkIn.isAfter(start)) && checkIn.isBefore(end.plusDays(1))) {
-                    seasonalMultiplier = sp.getPriceMultiplier();
-                    appliedSeasonRule = sp.getDescription() + " (x" + sp.getPriceMultiplier() + ")";
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "⚠️ Seasonal pricing error: " + ex.getMessage());
-        }
-
-        double baseAmount = basePrice * days * seasonalMultiplier;
+        double baseAmount = room.getPrice() * days;
 
         guestIdField.setText(String.valueOf(r.getGuestId()));
         roomInfoField.setText(room.getRoomNumber() + " - " + room.getType());
         stayField.setText(days + " nights");
-        seasonField.setText(appliedSeasonRule);
 
         Promotion promo = new PromotionDAO().getValidPromotionForReservation(r.getReservationId());
         double discount = 0;
