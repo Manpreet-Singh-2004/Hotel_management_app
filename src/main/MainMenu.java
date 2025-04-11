@@ -25,6 +25,7 @@ public class MainMenu extends JFrame {
         JButton guestBtn = new JButton("👤 Manage Guests");
         JButton roomBtn = new JButton("🏨 Manage Rooms");
         JButton reserveBtn = new JButton("📅 Make Reservation");
+        JButton groupBtn = new JButton("👪 Group Reservations");
         JButton inventoryBtn = new JButton("📦 Inventory");
         JButton billingBtn = new JButton("💳 Billing");
         JButton reportBtn = new JButton("📊 Reports");
@@ -40,6 +41,7 @@ public class MainMenu extends JFrame {
             panel.add(guestBtn);
             panel.add(roomBtn);
             panel.add(reserveBtn);
+            panel.add(groupBtn);
             panel.add(inventoryBtn);
             panel.add(billingBtn);
             panel.add(reportBtn);
@@ -50,6 +52,7 @@ public class MainMenu extends JFrame {
         } else if (currentUser.isReceptionist()) {
             panel.add(guestBtn);
             panel.add(reserveBtn);
+            panel.add(groupBtn);
             panel.add(billingBtn);
             panel.add(searchBtn);
             panel.add(historyBtn);
@@ -80,6 +83,11 @@ public class MainMenu extends JFrame {
             setVisible(false);
             new ReservationForm(currentUser, this).setVisible(true);
         });
+        
+        groupBtn.addActionListener(e -> {
+            setVisible(false);
+            new GroupReservationForm(currentUser, this).setVisible(true);
+        });
 
         inventoryBtn.addActionListener(e -> {
             setVisible(false);
@@ -109,7 +117,6 @@ public class MainMenu extends JFrame {
         historyBtn.addActionListener(e -> {
             dispose();
             new GuestHistoryScreen(currentUser, this).setVisible(true);
-
         });
 
         logoutBtn.addActionListener(e -> {
