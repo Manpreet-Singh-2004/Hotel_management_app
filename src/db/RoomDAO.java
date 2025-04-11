@@ -28,6 +28,21 @@ public class RoomDAO {
             return false;
         }
     }
+    public boolean updateRoom(Room r) {
+        String sql = "UPDATE Rooms SET room_number = ?, type = ?, price = ?, status = ? WHERE room_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, r.getRoomNumber());
+            stmt.setString(2, r.getType());
+            stmt.setDouble(3, r.getPrice());
+            stmt.setString(4, r.getStatus());
+            stmt.setInt(5, r.getRoomId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating room");
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public List<Room> getAllRooms() {
         List<Room> rooms = new ArrayList<>();

@@ -53,20 +53,13 @@ public class DBInitializer {
                         "password TEXT," +
                         "role TEXT);",
 
-                "CREATE TABLE IF NOT EXISTS Invoices (" +
-                        "invoice_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "reservation_id INTEGER," +
-                        "guest_id INTEGER," +
-                        "issue_date TEXT," +
-                        "total_amount REAL," +
-                        "FOREIGN KEY (reservation_id) REFERENCES Reservations(reservation_id));",
-
                 "CREATE TABLE IF NOT EXISTS GroupReservations (" +
                         "group_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "group_name TEXT NOT NULL," +
                         "contact_name TEXT," +
                         "contact_email TEXT," +
-                        "contact_phone TEXT" +
+                        "contact_phone TEXT," +
+                        "shared_billing BOOLEAN DEFAULT 0" +
                         ");",
 
                 "CREATE TABLE IF NOT EXISTS GroupReservationRooms (" +
@@ -90,14 +83,6 @@ public class DBInitializer {
                         "is_global INTEGER DEFAULT 0," +
                         "FOREIGN KEY (reservation_id) REFERENCES Reservations(reservation_id));",
 
-                "CREATE TABLE IF NOT EXISTS GroupReservations (" +
-                        "group_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "group_name TEXT NOT NULL," +
-                        "contact_name TEXT," +
-                        "contact_email TEXT," +
-                        "contact_phone TEXT," +
-                        "shared_billing BOOLEAN DEFAULT 0" +
-                        ");",
                 "CREATE TABLE IF NOT EXISTS Invoices (" +
                         "invoice_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "reservation_id INTEGER," +
