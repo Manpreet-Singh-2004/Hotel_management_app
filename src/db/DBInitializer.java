@@ -66,10 +66,12 @@ public class DBInitializer {
                         "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "group_id INTEGER," +
                         "room_id INTEGER," +
+                        "guest_id INTEGER," +
                         "check_in TEXT," +
                         "check_out TEXT," +
                         "FOREIGN KEY(group_id) REFERENCES GroupReservations(group_id)," +
-                        "FOREIGN KEY(room_id) REFERENCES Rooms(room_id)" +
+                        "FOREIGN KEY(room_id) REFERENCES Rooms(room_id)," +
+                        "FOREIGN KEY(guest_id) REFERENCES Guests(guest_id)" +
                         ");",
 
                 "CREATE TABLE IF NOT EXISTS Promotions (" +
