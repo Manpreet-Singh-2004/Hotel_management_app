@@ -42,7 +42,6 @@ public class ReservationForm extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         add(mainPanel);
 
-        // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Create / Update Reservation"));
 
@@ -80,26 +79,23 @@ public class ReservationForm extends JFrame {
         JPanel top = new JPanel(new BorderLayout(10, 10));
         top.add(formPanel, BorderLayout.CENTER);
         top.add(buttonPanel, BorderLayout.SOUTH);
-
         mainPanel.add(top, BorderLayout.NORTH);
 
-        // Table
         tableModel = new DefaultTableModel(new String[]{"ID", "Guest", "Room", "Check-in", "Check-out", "Status", "Requests"}, 0);
         table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
         loadGuests();
         loadRooms();
         loadReservations();
 
-        // Actions
+        checkInChooser.getDateEditor().addPropertyChangeListener(evt -> loadRooms());
+        checkOutChooser.getDateEditor().addPropertyChangeListener(evt -> loadRooms());
+
         addBtn.addActionListener(e -> addReservation());
         updateBtn.addActionListener(e -> updateReservation());
         deleteBtn.addActionListener(e -> deleteReservation());
-
         table.getSelectionModel().addListSelectionListener(e -> populateFormFromSelected());
-
         backBtn.addActionListener(e -> {
             mainMenu.setVisible(true);
             dispose();
@@ -113,7 +109,34 @@ public class ReservationForm extends JFrame {
 
     private void loadRooms() {
         roomCombo.removeAllItems();
-        for (Room r : new RoomDAO().getAllRooms()) roomCombo.addItem(r);
+        Date inDate = checkInChooser.getDate();
+        Date outDate = checkOutChooser.getDate();
+
+        List<Room> allRooms = new RoomDAO().getAllRooms();
+        List<Reservation> allRes = new ReservationDAO().getAllReservations();
+
+        for (Room room : allRooms) {
+            boolean available = true;
+
+            for (Reservation res : allRes) {
+                if (res.getRoomId() == room.getRoomId()) {
+                    try {
+                        Date resIn = new SimpleDateFormat("yyyy-MM-dd").parse(res.getCheckIn());
+                        Date resOut = new SimpleDateFormat("yyyy-MM-dd").parse(res.getCheckOut());
+
+                        if (inDate != null && outDate != null &&
+                                inDate.before(resOut) && outDate.after(resIn)) {
+                            available = false;
+                            break;
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+
+            if (available) {
+                roomCombo.addItem(room);
+            }
+        }
     }
 
     private void loadReservations() {
@@ -154,8 +177,12 @@ public class ReservationForm extends JFrame {
             boolean ok = new ReservationDAO().addReservation(res);
 
             if (ok) {
+                room.setStatus("Occupied");
+                new RoomDAO().updateRoom(room);
+
                 JOptionPane.showMessageDialog(this, "✅ Reservation added!");
                 loadReservations();
+                loadRooms(); // Refresh rooms after booking
             } else {
                 JOptionPane.showMessageDialog(this, "❌ Failed to add reservation.");
             }
@@ -215,6 +242,7 @@ public class ReservationForm extends JFrame {
             if (ok) {
                 JOptionPane.showMessageDialog(this, "🗑 Reservation deleted!");
                 loadReservations();
+                loadRooms();
             } else {
                 JOptionPane.showMessageDialog(this, "❌ Failed to delete reservation.");
             }
