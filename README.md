@@ -1,7 +1,7 @@
 ## 🔶 Functional Gaps To Implement
 
 - [x] **Housekeeping Task Scheduling**  
-  Implement a `Housekeeping` module to auto-flag rooms for cleaning post check-out and track cleaning status. Include deep cleaning or maintenance flagging options.
+  Implement a `Housekeeping` module to auto-flag rooms for cleaning post check-out and track cleaning status. Include deep cleaning or maintenance flagging options. - Shreyas
 
 - [ ] **Dynamic Room Assignment During Check-In**  
   Assign rooms automatically based on availability and guest preferences (e.g., room type, floor). Real-time updates to room status needed.
