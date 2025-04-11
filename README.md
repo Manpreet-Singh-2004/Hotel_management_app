@@ -6,8 +6,8 @@
 - [ ] **Dynamic Room Assignment During Check-In**  
   Assign rooms automatically based on availability and guest preferences (e.g., room type, floor). Real-time updates to room status needed.
 
-- [ ] **Guest History Tracking**  
-  Maintain records of past stays, including preferences, billing history, and feedback, for personalized experiences and promotions.
+- [x] **Guest History Tracking**  
+  Maintain records of past stays, including preferences, billing history, and feedback, for personalized experiences and promotions. - Sahib
 
 - [ ] **Group Reservations with Shared Billing**  
   Allow booking multiple rooms in one reservation, with billing options: single invoice for the group or individual billing per guest.

@@ -31,6 +31,7 @@ public class MainMenu extends JFrame {
         JButton reportBtn = new JButton("📊 Reports");
         JButton searchBtn = new JButton("🔍 Search / Filter");
         JButton promoBtn = new JButton("🎁 Promotions");
+        JButton historyBtn = new JButton("📜 View History");
         JButton logoutBtn = new JButton("🔐 Logout");
         JButton exitBtn = new JButton("🚪 Exit");
         JButton housekeepingBtn = new JButton("🧹 Manage Housekeeping");
@@ -46,11 +47,13 @@ public class MainMenu extends JFrame {
             panel.add(searchBtn);
             panel.add(promoBtn);
             panel.add(housekeepingBtn);
+            panel.add(historyBtn);
         } else if (currentUser.isReceptionist()) {
             panel.add(guestBtn);
             panel.add(reserveBtn);
             panel.add(billingBtn);
             panel.add(searchBtn);
+            panel.add(historyBtn);
         }
 
         panel.add(logoutBtn);
@@ -102,6 +105,12 @@ public class MainMenu extends JFrame {
         promoBtn.addActionListener(e -> {
             setVisible(false);
             new PromotionForm(currentUser, this).setVisible(true);
+        });
+
+        historyBtn.addActionListener(e -> {
+            dispose();
+            new GuestHistoryScreen(currentUser, this).setVisible(true);
+
         });
 
         logoutBtn.addActionListener(e -> {
