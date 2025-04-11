@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="20 (2)" project-jdk-type="JavaSDK">
 =======
   <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
 >>>>>>> Stashed changes
+=======
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_20" default="true" project-jdk-name="20 (2)" project-jdk-type="JavaSDK">
+>>>>>>> parent of de7eae8 (Added group reservation full functionality)
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
