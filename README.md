@@ -14,7 +14,7 @@ Hotel_management_app/
 │   ├── main/                # Contains main files
 │   ├── db/                  # DB Initialization
 │   ├── model/               # Model classes (Reservation, Guest, Room, etc.)
-│   └── ui/                  # UI screens (Login, MainMenu, ReservationForm, etc.)
+│   └── ui/                  # UI screens (Login, ReservationForm, etc.)
 ├── hotel.db                 # SQLite database
 ├── README.md
 ```
